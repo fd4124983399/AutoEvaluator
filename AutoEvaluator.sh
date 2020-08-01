@@ -9,7 +9,7 @@ if [ -f $OutputfileName ]; then
 	rm $OutputfileName
 fi
 
-for file in  $(ls $CodeFolder | egrep -i '*.zip|*.rar');
+for file in  $(ls $CodeFolder | egrep -i '*.zip|*.rar|*.7z');
 do
 	echo $file >> $OutputfileName
 
@@ -27,6 +27,8 @@ do
 		unzip $CodeFolder$file -d $DecompressedFolder
 	elif [[ $file =~ ".rar" ]]; then
 		rar x $CodeFolder$file $DecompressedFolder
+	elif [[ $file =~ ".7z" ]]; then
+		7z x $CodeFolder$file -o$DecompressedFolder
 	fi
 
 	while [ ! -d $FolderContainsQuestions${QuestionFolders[0]} ]		# try to find the folder which really contains QuestionFolders
