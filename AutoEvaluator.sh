@@ -1,26 +1,30 @@
 CodeFolder="Codes/"
 DecompressedFolder="Codes/Decompressed/"
+OutputfileFolder="OutputLogs/"
 QuestionFolders=("Q1_Fractions/" "Q2_Sort/" "Q3_Palindrome/")
 MakefileName=("makefile1" "makefile2" "makefile3")
 MainfileName=("main.cpp1" "main.cpp2" "main.cpp3")
-OutputfileName="Output"
 
-if [ -f $OutputfileName ]; then
-	rm $OutputfileName
+if [ ! -d $OutputfileFolder ]; then
+	mkdir -p $OutputfileFolder
 fi
 
 for file in  $(ls $CodeFolder | egrep -i '*.zip|*.rar|*.7z');
 do
-	echo $file >> $OutputfileName
+
+	OutputfilePath=$OutputfileFolder$file.log
+	if [ -f $OutputfilePath ]; then
+		rm -f $OutputfilePath
+	fi
 
 	FolderContainsQuestions=$DecompressedFolder
 
 	if [ ! -d $DecompressedFolder ]; then
-		mkdir  $DecompressedFolder
+		mkdir -p $DecompressedFolder
 	fi
 
 	if [ "$(ls -A  $DecompressedFolder)" ]; then		# Folder is not empty
-		rm -r $DecompressedFolder/*
+		rm -rf $DecompressedFolder/*
 	fi
 
 	if [[ $file =~ ".zip" ]]; then
@@ -38,12 +42,10 @@ do
 
 	for ((i=0; i < ${#QuestionFolders[@]}; i++))
 	do
-		cp ${MakefileName[$i]} $FolderContainsQuestions${QuestionFolders[$i]}makefile
-		cp ${MainfileName[$i]} $FolderContainsQuestions${QuestionFolders[$i]}main.cpp
+		cp -f ${MakefileName[$i]} $FolderContainsQuestions${QuestionFolders[$i]}makefile
+		cp -f ${MainfileName[$i]} $FolderContainsQuestions${QuestionFolders[$i]}main.cpp
 		make -C $FolderContainsQuestions${QuestionFolders[$i]}
-		$FolderContainsQuestions${QuestionFolders[$i]}binary.out >> $OutputfileName 		# create a new process
+		$FolderContainsQuestions${QuestionFolders[$i]}binary.out >> $OutputfilePath
 	done
-
-	echo -------------------------------------------- >> $OutputfileName
 
 done
