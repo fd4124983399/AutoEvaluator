@@ -45,7 +45,7 @@ do
 		cp -f "${MakefileName[$i]}" "$FolderContainsQuestions""${QuestionFolders[$i]}"makefile
 		cp -f "${MainfileName[$i]}" "$FolderContainsQuestions""${QuestionFolders[$i]}"main.cpp
 		make -C "$FolderContainsQuestions""${QuestionFolders[$i]}"
-		"$FolderContainsQuestions""${QuestionFolders[$i]}"binary.out >> "$OutputfilePath"
+		{ "$FolderContainsQuestions""${QuestionFolders[$i]}"binary.out; } &>> "$OutputfilePath"
 	done
 
 done
