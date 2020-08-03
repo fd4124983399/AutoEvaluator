@@ -4,6 +4,8 @@ OutputfileFolder="OutputLogs/"
 QuestionFolders=("Q1_Fractions/" "Q2_Sort/" "Q3_Palindrome/")
 MakefileName=("makefile1" "makefile2" "makefile3")
 MainfileName=("main.cpp1" "main.cpp2" "main.cpp3")
+MainfileNameInProject="main.cpp"
+OutputfileName="binary.out"
 
 if [ ! -d "$OutputfileFolder" ]; then
 	mkdir -p "$OutputfileFolder"
@@ -37,8 +39,8 @@ do
 	for ((i=0; i < ${#QuestionFolders[@]}; i++))
 	do
 		cp -f "${MakefileName[$i]}" "$FolderContainsQuestions""${QuestionFolders[$i]}"makefile
-		cp -f "${MainfileName[$i]}" "$FolderContainsQuestions""${QuestionFolders[$i]}"main.cpp
+		cp -f "${MainfileName[$i]}" "$FolderContainsQuestions""${QuestionFolders[$i]}""$MainfileNameInProject"
 		make -C "$FolderContainsQuestions""${QuestionFolders[$i]}"
-		{ "$FolderContainsQuestions""${QuestionFolders[$i]}"binary.out; } &>> "$OutputfilePath"
+		{ "$FolderContainsQuestions""${QuestionFolders[$i]}""$OutputfileName"; } &>> "$OutputfilePath"
 	done
 done
