@@ -21,8 +21,6 @@ do
 		rm -f "$OutputfilePath"
 	fi
 
-	FolderContainsQuestions="$DecompressedFolder"
-
 	if [ "$(ls -A  "$DecompressedFolder")" ]; then		# Folder is not empty
 		rm -rf "$DecompressedFolder"/*
 	fi
@@ -35,11 +33,7 @@ do
 		7z x "$CodeFolder$file" -o"$DecompressedFolder"
 	fi
 
-	while [ ! -d "${FolderContainsQuestions}""${QuestionFolders[0]}" ]		# try to find the folder which really contains QuestionFolders
-	do
-		FolderContainsQuestions="$FolderContainsQuestions""$(ls $FolderContainsQuestions -A)/"
-	done
-
+	FolderContainsQuestions="$(find -type d -name ${QuestionFolders[0]::-1} -printf '%h\n' -quit | sort -u)/"
 	for ((i=0; i < ${#QuestionFolders[@]}; i++))
 	do
 		cp -f "${MakefileName[$i]}" "$FolderContainsQuestions""${QuestionFolders[$i]}"makefile
@@ -47,5 +41,4 @@ do
 		make -C "$FolderContainsQuestions""${QuestionFolders[$i]}"
 		{ "$FolderContainsQuestions""${QuestionFolders[$i]}"binary.out; } &>> "$OutputfilePath"
 	done
-
 done
