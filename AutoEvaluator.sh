@@ -19,6 +19,7 @@ if [ "$(ls -A  "$DecompressedFolder")" ]; then		# Folder is not empty
 	rm -rf "$DecompressedFolder"/*
 fi
 
+find "$CodeFolder" -maxdepth 1 -name "* *" -type f | rename 's/ /_/g'
 for file in  $(ls "$CodeFolder" | egrep -i '*.zip|*.rar|*.7z');
 do
 	OutputfilePath="$OutputfileFolder""$file".log

@@ -2,7 +2,7 @@
 
 自動解壓，置換main file，編譯，執行並輸出的自動化解決方案  
 
-可以簡化程式課作業批改流程  
+可以簡化程式課作業批改流程 (如果作業的形式能以更換main file去call特定function來檢驗正確性的話)  
 
 建議使用sudo執行以降低因權限問題造成的全自動化流程失敗  
 
@@ -26,3 +26,5 @@
 4. 設定各小題的資料夾名稱，這些資料夾應該包含需批改的專案，makefile會被放進這些目錄
 
 5. sudo bash AutoEvaluator.sh
+
+6. 如果出現 $'\r': command not found 之類的錯誤訊息，請先安裝dos2unix把檔案格式轉成unix
