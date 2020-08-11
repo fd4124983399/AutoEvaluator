@@ -1,11 +1,12 @@
 CodeFolder="Codes/"
 DecompressedFolder="Codes/Decompressed/"
 OutputfileFolder="OutputLogs/"
-QuestionFolders=("Q1_Fractions/" "Q2_Sort/" "Q3_Palindrome/")
-MakefileName=("makefile1" "makefile2" "makefile3")
-MainfileName=("main.cpp1" "main.cpp2" "main.cpp3")
+QuestionFolders=("Q1_Vector/" "Q2_DoublyCircularLinkedList/")
+MakefileName=("makefile1" "makefile2")
+MainfileName=("main.cpp1" "main.cpp2")
 MainfileNameInProject="main.cpp"
 OutputfileName="binary.out"
+TestCaseAmount=(1 5)
 
 if [ ! -d "$OutputfileFolder" ]; then
 	mkdir -p "$OutputfileFolder"
@@ -37,11 +38,17 @@ do
 
 	chmod -R 755 "$DecompressedFolder""$file"		# use 7z to create a new folder seems set the permission to 700
 	FolderContainsQuestions="$(find "$DecompressedFolder""$file" -type d -name ${QuestionFolders[0]::-1} -printf '%h\n' -quit | sort -u)/"
+	
+	# use [@] to list all the elements of array, use # to get the amount of it
 	for ((i=0; i < ${#QuestionFolders[@]}; i++))
 	do
 		cp -f "${MakefileName[$i]}" "$FolderContainsQuestions""${QuestionFolders[$i]}"makefile
 		cp -f "${MainfileName[$i]}" "$FolderContainsQuestions""${QuestionFolders[$i]}""$MainfileNameInProject"
 		make -C "$FolderContainsQuestions""${QuestionFolders[$i]}"
-		{ "$FolderContainsQuestions""${QuestionFolders[$i]}""$OutputfileName"; } &>> "$OutputfilePath"
+
+		for ((j=1; j <= ${TestCaseAmount[i]}; j++))
+		do
+			{ "$FolderContainsQuestions""${QuestionFolders[$i]}"binary.out $j; } &>> "$OutputfilePath"
+		done
 	done
 done
