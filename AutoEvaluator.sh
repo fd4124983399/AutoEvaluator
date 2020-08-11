@@ -6,7 +6,7 @@ MakefileName=("makefile1" "makefile2")
 MainfileName=("main.cpp1" "main.cpp2")
 MainfileNameInProject="main.cpp"
 OutputfileName="binary.out"
-TestCaseAmount=(1 5)
+TestCaseAmount=(1 8)
 
 if [ ! -d "$OutputfileFolder" ]; then
 	mkdir -p "$OutputfileFolder"
@@ -41,18 +41,30 @@ do
 	fi
 
 	chmod -R 755 "$DecompressedFolder""$file"		# use 7z to create a new folder seems set the permission to 700
-	FolderContainsQuestions="$(find "$DecompressedFolder""$file" -type d -name ${QuestionFolders[0]::-1} -printf '%h\n' -quit | sort -u)/"
-	
-	# use [@] to list all the elements of array, use # to get the amount of it
+
 	for ((i=0; i < ${#QuestionFolders[@]}; i++))
 	do
-		cp -f "${MakefileName[$i]}" "$FolderContainsQuestions""${QuestionFolders[$i]}"makefile
-		cp -f "${MainfileName[$i]}" "$FolderContainsQuestions""${QuestionFolders[$i]}""$MainfileNameInProject"
-		make -C "$FolderContainsQuestions""${QuestionFolders[$i]}"
+		FolderContainsQuestions="$(find "$DecompressedFolder""$file" -type d -name ${QuestionFolders[$i]::-1} -printf '%h\n' -quit | sort -u)/"
 
-		for ((j=1; j <= ${TestCaseAmount[i]}; j++))
+		if [ $FolderContainsQuestions != "/" ]; then
+			break
+		fi
+	done	
+
+	if [ $FolderContainsQuestions == "/" ]; then
+		echo "Solution folder not exist" >> "$OutputfilePath"
+	else
+		# use [@] to list all the elements of array, use # to get the amount of it
+		for ((i=0; i < ${#QuestionFolders[@]}; i++))
 		do
-			{ "$FolderContainsQuestions""${QuestionFolders[$i]}"binary.out $j; } &>> "$OutputfilePath"
+			cp -f "${MakefileName[$i]}" "$FolderContainsQuestions""${QuestionFolders[$i]}"makefile
+			cp -f "${MainfileName[$i]}" "$FolderContainsQuestions""${QuestionFolders[$i]}""$MainfileNameInProject"
+			make -C "$FolderContainsQuestions""${QuestionFolders[$i]}"
+
+			for ((j=1; j <= ${TestCaseAmount[i]}; j++))
+			do
+				{ "$FolderContainsQuestions""${QuestionFolders[$i]}"binary.out $j; } &>> "$OutputfilePath"
+			done
 		done
-	done
+	fi 
 done
