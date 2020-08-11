@@ -28,6 +28,10 @@ do
 		rm -f "$OutputfilePath"
 	fi
 
+	if [ ! -d "$DecompressedFolder""$file" ]; then
+		mkdir -p "$DecompressedFolder""$file"
+	fi
+
 	if [[ "$file" =~ ".zip" ]]; then
 		unzip "$CodeFolder$file" -d "$DecompressedFolder""$file"
 	elif [[ $file =~ ".rar" ]]; then
