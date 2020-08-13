@@ -17,15 +17,15 @@ if [ ! -d "$DecompressedFolder" ]; then
 fi
 
 if [ "$(ls -A  "$DecompressedFolder")" ]; then		# Folder is not empty
-	rm -rf "$DecompressedFolder"/*
+	sudo rm -rf "$DecompressedFolder"/*
 fi
 
-find "$CodeFolder" -maxdepth 1 -name "* *" -type f | rename 's/ /_/g'
+find "$CodeFolder" -maxdepth 1 -name "* *" -type f | rename 's/ /_/g'		# Replace " " to "_" in filename
 for file in  $(ls "$CodeFolder" | egrep -i '*.zip|*.rar|*.7z');
 do
 	OutputfilePath="$OutputfileFolder""$file".log
 	if [ -f "$OutputfilePath" ]; then
-		rm -f "$OutputfilePath"
+		sudo rm -f "$OutputfilePath"
 	fi
 
 	if [ ! -d "$DecompressedFolder""$file" ]; then
@@ -39,8 +39,6 @@ do
 	elif [[ $file =~ ".7z" ]]; then
 		7z x "$CodeFolder$file" -o"$DecompressedFolder""$file"
 	fi
-
-	chmod -R 755 "$DecompressedFolder""$file"		# use 7z to create a new folder seems set the permission to 700
 
 	for ((i=0; i < ${#QuestionFolders[@]}; i++))
 	do
