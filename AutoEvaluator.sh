@@ -21,7 +21,7 @@ if [ "$(ls -A  "$DecompressedFolder")" ]; then		# Folder is not empty
 fi
 
 find "$CodeFolder" -maxdepth 1 -name "* *" -type f | rename 's/ /_/g'		# Replace " " to "_" in filename
-for file in  $(ls "$CodeFolder" | egrep -i '*.zip|*.rar|*.7z');
+for file in  $(ls "$CodeFolder" | egrep -i ".*.zip$|.*.rar$|.*.7z$");
 do
 	OutputfilePath="$OutputfileFolder""$file".log
 	if [ -f "$OutputfilePath" ]; then
@@ -32,11 +32,11 @@ do
 		mkdir -p "$DecompressedFolder""$file"
 	fi
 
-	if [[ "$file" =~ ".zip" ]]; then
+	if [[ "$file" =~ .*.zip$ ]]; then
 		unzip "$CodeFolder$file" -d "$DecompressedFolder""$file"
-	elif [[ $file =~ ".rar" ]]; then
+	elif [[ $file =~ .*.rar$ ]]; then
 		rar x "$CodeFolder$file" "$DecompressedFolder""$file"
-	elif [[ $file =~ ".7z" ]]; then
+	elif [[ $file =~ .*.7z$ ]]; then
 		7z x "$CodeFolder$file" -o"$DecompressedFolder""$file"
 	fi
 
